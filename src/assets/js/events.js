@@ -68,30 +68,29 @@ window.addEventListener( 'load', () => {
 
             //create room link
             let roomLink = `${ location.origin }?room=${ roomName.trim().replace( ' ', '_' ) }_${ helpers.generateRandomString() }`;
-            let postTitle = 'Enter Meet'
+            let postTitle = 'Enter Meet with link'
 
             //show message with link to room
             document.querySelector( '#room-created' ).innerHTML = `
 
-                      <a href="https://facebook.com/sharer.php?u=${roomLink}" class="facebook-btn" target="_blank">
-                      <i class="fab fa-facebook"></i>
-                      </a>
-                
-                      <a href="https://twitter.com/share?url=${roomLink}&text=${postTitle}" class="twitter-btn" target="_blank">
-                        <i class="fab fa-twitter"></i>
-                      </a>
-                
-                
-                      <a href="https://www.linkedin.com/shareArticle?url=${roomLink}&title=${postTitle}" class="linkedin-btn" target="_blank">
-                        <i class="fab fa-linkedin"></i>
-                      </a>
-                
-                      <a href="https://wa.me/?text=${postTitle} ${roomLink}" class="whatsapp-btn" target="_blank">
-                        <i class="fab fa-whatsapp"></i>
-                      </a>
+                    <a href="https://wa.me/?text=${postTitle} ${roomLink}" class="whatsapp-btn" target="_blank">
+                    <i class="fab fa-whatsapp"></i>
+                    </a>
 
+                    <a href="https://facebook.com/sharer.php?u=${roomLink}" class="facebook-btn" target="_blank">
+                    <i class="fab fa-facebook"></i>
+                    </a>
+            
+                    <a href="https://twitter.com/share?url=${roomLink}&text=${postTitle}" class="twitter-btn" target="_blank">
+                    <i class="fab fa-twitter"></i>
+                    </a>
+            
+            
+                    <a href="https://www.linkedin.com/shareArticle?url=${roomLink}&title=${postTitle}" class="linkedin-btn" target="_blank">
+                    <i class="fab fa-linkedin"></i>
+                    </a>
 
-                      <a href="${roomLink}" class="btn btn-block rounded-0 shade1">Enter Room</a>
+                    <a href="${roomLink}" class="btn btn-block rounded-0 shade1">Enter Room</a>
                       
                     `;
 
