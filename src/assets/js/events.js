@@ -84,6 +84,11 @@ window.addEventListener( 'load', () => {
                     <a href="https://twitter.com/share?url=${roomLink}&text=${postTitle}" class="twitter-btn" target="_blank">
                     <i class="fab fa-twitter"></i>
                     </a>
+            
+            
+                    <a href="https://www.linkedin.com/shareArticle?url=${roomLink}&title=${postTitle}" class="linkedin-btn" target="_blank">
+                    <i class="fab fa-linkedin"></i>
+                    </a>
 
                     <a href="${roomLink}" class="btn btn-block rounded-0 shade1">Enter Room</a>
                       

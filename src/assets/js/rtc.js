@@ -450,7 +450,7 @@ window.addEventListener( 'load', () => {
 
         //When user choose to record screen
         document.getElementById( 'record-screen' ).addEventListener( 'click', () => {
-            h.toggleModal( 'recording-options-modal', false );
+            h.toggleModal( 'recording-options-modal', true );
 
             if ( screen && screen.getVideoTracks().length ) {
                 startRecording( screen );

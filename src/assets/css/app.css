@@ -4,10 +4,17 @@
     --colorShade2: rgb(193, 207, 209);
   }
 
-
-
 body{
     background-color: var(--colorShade2);
+    color: var(--colorShade2) ;
+}
+
+#closeModal{
+    color:rgb(0, 0, 0) !important;
+}
+
+.custom-modal-content{
+    width: 25% !important;
 }
 
 .text-white {
