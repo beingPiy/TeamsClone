@@ -1,25 +1,28 @@
 // stream module will return a function which will set up platform for communication
 // socket arguement should be passed to it
 const stream = ( socket ) => {
-    socket.on( 'subscribe', ( data ) => {
-        //joining room
-        socket.join( data.room );
-        socket.join( data.socketId );
+    socket.on( 'subscribe', ( info ) => {
+        //joining room for meeting
+        socket.join( info.socketId );
+        socket.join( info.room );
 
-        //Inform other members in the room of new user's arrival
-        if ( socket.adapter.rooms[data.room].length > 1 ) {
-            socket.to( data.room ).emit( 'new user', { socketId: data.socketId } );
+        // new user arrived 
+        // inform other member
+        if ( socket.adapter.rooms[info.room].length > 1 ) {
+            socket.to( info.room ).emit( 'new user', { socketId: info.socketId } );
         }
     } );
 
-
-    socket.on( 'newUserStart', ( data ) => {
-        socket.to( data.to ).emit( 'newUserStart', { sender: data.sender } );
+    // starting communication with new user added
+    socket.on( 'newUserStart', ( info ) => {
+        socket.to( info.to ).emit( 'newUserStart', { sender: info.sender } );
     } );
 
-
-    socket.on( 'sdp', ( data ) => {
-        socket.to( data.to ).emit( 'sdp', { description: data.description, sender: data.sender } );
+    // client starts the communication and creates an offer 
+    // using Session Description Protocol(SDP) 
+    // and transfers it to other peer
+    socket.on( 'sdp', ( info ) => {
+        socket.to( info.to ).emit( 'sdp', { description: info.description, sender: info.sender } );
     } );
 
 
@@ -27,15 +30,15 @@ const stream = ( socket ) => {
     // We share these ICE's to the other peer, such that they know 
     // connection points to reach us
 
-    socket.on( 'ice candidates', ( data ) => {
-        socket.to( data.to ).emit( 'ice candidates', { candidate: data.candidate, sender: data.sender } );
+    socket.on( 'ice candidates', ( info ) => {
+        socket.to( info.to ).emit( 'ice candidates', { candidate: info.candidate, sender: info.sender } );
     } );
 
 
     // for working with chat functionality
-    // note that we are sharing sender data in sender key
-    socket.on( 'chat', ( data ) => {
-        socket.to( data.room ).emit( 'chat', { sender: data.sender, msg: data.msg } );
+    // note that we are sharing sender info in sender key
+    socket.on( 'chat', ( info ) => {
+        socket.to( info.room ).emit( 'chat', { sender: info.sender, msg: info.msg } );
     } );
 };
 
