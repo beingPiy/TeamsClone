@@ -38,4 +38,4 @@ app.get( '/', ( req, res ) => {
 io.of( '/stream' ).on( 'connection', stream );
 
 // binds and listen for connections for given port
-server.listen( 3000 );
+server.listen( process.env.PORT || 3000 );
