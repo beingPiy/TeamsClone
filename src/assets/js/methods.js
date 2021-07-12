@@ -147,7 +147,7 @@ export default {
 
         let colDiv = document.createElement( 'div' );
         colDiv.className = `col-10 card chat-card msg ${ msgBg }`;
-        colDiv.innerHTML = `<strong><u><i>${ senderName }</i></u></strong>  <br>` + `<h5>` + xssFilters.inHTMLData( data.msg ) + `</h5>`
+        colDiv.innerHTML = `<strong><u><i>${ senderName }</i></u></strong>  <br>` + `<h6>` + xssFilters.inHTMLData( data.msg ) + `</h6>`
 
         let rowDiv = document.createElement( 'div' );
         rowDiv.className = `row ${ contentAlign } mb-2`;
