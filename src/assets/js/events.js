@@ -2,11 +2,13 @@ import helpers from './helpers.js';
 
 
 window.addEventListener( 'load', () => {
-    //When the chat icon is clicked
+    // Whenever chat icon is clicked chat-pane will open
     document.querySelector( '#toggle-chat-pane' ).addEventListener( 'click', ( e ) => {
+        // store the chat elements and all messages that come in main section
         let chatElem = document.querySelector( '#chat-pane' );
         let mainSecElem = document.querySelector( '#main-section' );
 
+        // add messages in chat-pane, adjust the color according to user
         if ( chatElem.classList.contains( 'chat-opened' ) ) {
             chatElem.setAttribute( 'hidden', true );
             mainSecElem.classList.remove( 'col-md-9' );
@@ -21,7 +23,7 @@ window.addEventListener( 'load', () => {
             chatElem.classList.add( 'chat-opened' );
         }
 
-        //remove the 'New' badge on chat icon (if any) once chat is opened.
+        //remove the New badge on chat icon after chat is opened
         setTimeout( () => {
             if ( document.querySelector( '#chat-pane' ).classList.contains( 'chat-opened' ) ) {
                 helpers.toggleChatNotificationBadge();
@@ -30,7 +32,7 @@ window.addEventListener( 'load', () => {
     } );
 
 
-    //When the video frame is clicked. This will enable picture-in-picture
+    // Enable picture in picture mode once video is clicked
     document.getElementById( 'local' ).addEventListener( 'click', () => {
         if ( !document.pictureInPictureElement ) {
             document.getElementById( 'local' ).requestPictureInPicture()
@@ -52,18 +54,23 @@ window.addEventListener( 'load', () => {
     
 
 
-    //When the 'Create room" is button is clicked
+    // Once Create room button clicked
     document.getElementById( 'create-room' ).addEventListener( 'click', ( e ) => {
         e.preventDefault();
 
+        // fetch the room name given
         let roomName = document.querySelector( '#room-name' ).value;
+
+        // fetch users name
         let yourName = document.querySelector( '#your-name' ).value;
 
+        // if both entries are valid
         if ( roomName && yourName ) {
-            //remove error message, if any
+
+            // firstly remove any error message if occured previously
             document.querySelector( '#err-msg' ).innerHTML = "";
 
-            //save the user's name in sessionStorage
+            //  preserve the username in session storage space
             sessionStorage.setItem( 'username', yourName );
 
             //create room link
@@ -96,34 +103,38 @@ window.addEventListener( 'load', () => {
         }
 
         else {
-            document.querySelector( '#err-msg' ).innerHTML = "All fields are required";
+            document.querySelector( '#err-msg' ).innerHTML = "All fields are mandatory";
         }
     } );
 
 
-    //When the 'Enter room' button is clicked.
+    //  When Enter room button from left dialogue box clicked
     document.getElementById( 'enter-room' ).addEventListener( 'click', ( e ) => {
         e.preventDefault();
 
+        // fetch username and store in the name variable 
         let name = document.querySelector( '#username' ).value;
 
         if ( name ) {
-            //remove error message, if any
+            // if any error message occured previously remove it
             document.querySelector( '#err-msg-username' ).innerHTML = "";
 
-            //save the user's name in sessionStorage
+            //preserve user name in session storage space
             sessionStorage.setItem( 'username', name );
 
-            //reload room
+            // again load the room
             location.reload();
         }
 
+        // if invalid(empty) entry for name, show error message
         else {
             document.querySelector( '#err-msg-username' ).innerHTML = "Please input your name";
         }
     } );
 
-
+    // in remote video there will be two icons in bottom of video
+    // one to expand the video in full screen
+    // second to mute the mic of that remote person
     document.addEventListener( 'click', ( e ) => {
         if ( e.target && e.target.classList.contains( 'expand-remote-video' ) ) {
             helpers.maximiseStream( e );
@@ -134,7 +145,7 @@ window.addEventListener( 'load', () => {
         }
     } );
 
-
+    // closes the record screen and record self stream dialogue box
     document.getElementById( 'closeModal' ).addEventListener( 'click', () => {
         helpers.toggleModal( 'recording-options-modal', false );
     } );

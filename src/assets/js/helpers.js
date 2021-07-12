@@ -1,4 +1,5 @@
 export default {
+    // fetch the string to append in room name which will be used as id
     generateRandomString() {
         const crypto = window.crypto || window.msCrypto;
         let array = new Uint32Array(1);
@@ -6,7 +7,7 @@ export default {
         return crypto.getRandomValues(array);
     },
 
-
+    // removing the video
     closeVideo( elemId ) {
         if ( document.getElementById( elemId ) ) {
             document.getElementById( elemId ).remove();
@@ -14,12 +15,12 @@ export default {
         }
     },
 
-
+    // if all of it is false then page has focus
     pageHasFocus() {
         return !( document.hidden || document.onfocusout || window.onpagehide || window.onblur );
     },
 
-
+    // fetch the string given in url
     getQString( url = '', keyToReturn = '' ) {
         url = url ? url : location.href;
         let queryStrings = decodeURIComponent( url ).split( '#', 2 )[0].split( '?', 2 )[1];
@@ -47,12 +48,12 @@ export default {
         return null;
     },
 
-
+    // check if user media available
     userMediaAvailable() {
         return !!( navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia );
     },
 
-
+    // fetch user media
     getUserFullMedia() {
         if ( this.userMediaAvailable() ) {
             return navigator.mediaDevices.getUserMedia( {
@@ -69,7 +70,7 @@ export default {
         }
     },
 
-
+    // capture user audio from device
     getUserAudio() {
         if ( this.userMediaAvailable() ) {
             return navigator.mediaDevices.getUserMedia( {
@@ -86,7 +87,7 @@ export default {
     },
 
 
-
+    // capture the screen and transfer
     shareScreen() {
         if ( this.userMediaAvailable() ) {
             return navigator.mediaDevices.getDisplayMedia( {
@@ -106,7 +107,7 @@ export default {
         }
     },
 
-
+    // fetch ice server for communication
     getIceServer() {
         return {
             iceServers: [
@@ -125,7 +126,7 @@ export default {
         };
     },
 
-
+    // add messages within chat pane
     addChat( data, senderType ) {
         let chatMsgDiv = document.querySelector( '#chat-messages' );
         let contentAlign = 'justify-content-end';
@@ -142,11 +143,11 @@ export default {
 
         let infoDiv = document.createElement( 'div' );
         infoDiv.className = 'sender-info';
-        infoDiv.innerHTML = `${ senderName } - ${ moment().format( 'Do MMMM, YYYY h:mm a' ) }`;
+        infoDiv.innerHTML = ` ${ moment().format( 'h:mm a Do MMMM, YYYY ' ) }`;
 
         let colDiv = document.createElement( 'div' );
         colDiv.className = `col-10 card chat-card msg ${ msgBg }`;
-        colDiv.innerHTML = xssFilters.inHTMLData( data.msg )
+        colDiv.innerHTML = `<strong><u><i>${ senderName }</i></u></strong>  <br>`  + xssFilters.inHTMLData( data.msg )
 
         let rowDiv = document.createElement( 'div' );
         rowDiv.className = `row ${ contentAlign } mb-2`;
@@ -157,11 +158,6 @@ export default {
 
         chatMsgDiv.appendChild( rowDiv );
 
-        /**
-         * Move focus to the newly added message but only if:
-         * 1. Page has focus
-         * 2. User has not moved scrollbar upward. This is to prevent moving the scroll position if user is reading previous messages.
-         */
         if ( this.pageHasFocus ) {
             rowDiv.scrollIntoView();
         }

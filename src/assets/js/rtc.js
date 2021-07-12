@@ -2,20 +2,34 @@
 import h from './helpers.js';
 
 window.addEventListener( 'load', () => {
+
+    // fetch the room id from url
     const room = h.getQString( location.href, 'room' );
+
+    // fetch the username from session storage space
     const username = sessionStorage.getItem( 'username' );
 
+    // if there is no room id in url
+    // simply show the landing page of website
+    // in which host of meeting can enter hostName and roomName and can initiate meeting  
     if ( !room ) {
         document.querySelector( '#room-create' ).attributes.removeNamedItem( 'hidden' );
     }
 
+    // if url contains room id but session storage doesn't have name of user
+    // that means user is trying to join meeting from a link
+    // in this case open landing page for new users that are trying to enter meeting
     else if ( !username ) {
         document.querySelector( '#username-set' ).attributes.removeNamedItem( 'hidden' );
     }
 
+    // once you have both room id in url and 
+    // username in session storage 
+    // open the main conference page
     else {
         let commElem = document.getElementsByClassName( 'room-comm' );
 
+        // wherever the class is room-comm start showing it
         for ( let i = 0; i < commElem.length; i++ ) {
             commElem[i].attributes.removeNamedItem( 'hidden' );
         }
@@ -30,49 +44,53 @@ window.addEventListener( 'load', () => {
         var recordedStream = [];
         var mediaRecorder = '';
 
-        //Get user video by default
+        // Captutre video of who enters the meet by url
         getAndSetUserStream();
 
-
+        // initiate socket for connecting to the server
         socket.on( 'connect', () => {
-            //set socketId
+            // get and set socket id
             socketId = socket.io.engine.id;
 
-
+            // broadcast the event to all peers, within room
             socket.emit( 'subscribe', {
                 room: room,
                 socketId: socketId
             } );
 
-
+            // add new user from the server
             socket.on( 'new user', ( data ) => {
+                // broadcast 
                 socket.emit( 'newUserStart', { to: data.socketId, sender: socketId } );
                 pc.push( data.socketId );
                 init( true, data.socketId );
             } );
 
-
+            // push new user in pc, intialise with false
             socket.on( 'newUserStart', ( data ) => {
                 pc.push( data.sender );
                 init( false, data.sender );
             } );
 
-
+            // if data exist, add ice candidate for that candidate
             socket.on( 'ice candidates', async ( data ) => {
                 data.candidate ? await pc[data.sender].addIceCandidate( new RTCIceCandidate( data.candidate ) ) : '';
             } );
 
-
+            // stream media by Session Description Protocol
             socket.on( 'sdp', async ( data ) => {
+                // if decription is of offer type
+                // start new rtc session
                 if ( data.description.type === 'offer' ) {
                     data.description ? await pc[data.sender].setRemoteDescription( new RTCSessionDescription( data.description ) ) : '';
 
+                    // capture user audion and video
                     h.getUserFullMedia().then( async ( stream ) => {
                         if ( !document.getElementById( 'local' ).srcObject ) {
                             h.setLocalStream( stream );
                         }
 
-                        //save my stream
+                        // save the stream
                         myStream = stream;
 
                         stream.getTracks().forEach( ( track ) => {
@@ -94,7 +112,7 @@ window.addEventListener( 'load', () => {
                 }
             } );
 
-
+            // start conversation as chat
             socket.on( 'chat', ( data ) => {
                 h.addChat( data, 'remote' );
             } );
@@ -120,27 +138,30 @@ window.addEventListener( 'load', () => {
                 sender: username
             };
 
-            //emit chat message
+            //broadcast chat message
             socket.emit( 'chat', data );
 
-            //add localchat
+            //make localchat
             h.addChat( data, 'local' );
         }
 
 
-
+        // initiaise conection
         function init( createOffer, partnerName ) {
             pc[partnerName] = new RTCPeerConnection( h.getIceServer() );
 
+            // if screen contains tracks append it 
             if ( screen && screen.getTracks().length ) {
                 screen.getTracks().forEach( ( track ) => {
                     pc[partnerName].addTrack( track, screen );//should trigger negotiationneeded event
                 } );
             }
 
+            // if screen doesn't have tracks, add the stream
             else if ( myStream ) {
                 myStream.getTracks().forEach( ( track ) => {
-                    pc[partnerName].addTrack( track, myStream );//should trigger negotiationneeded event
+                    //will cause negotiationneeded event
+                    pc[partnerName].addTrack( track, myStream );
                 } );
             }
 
@@ -150,18 +171,19 @@ window.addEventListener( 'load', () => {
                     myStream = stream;
 
                     stream.getTracks().forEach( ( track ) => {
-                        pc[partnerName].addTrack( track, stream );//should trigger negotiationneeded event
+                        //will cause negotiationneeded event
+                        pc[partnerName].addTrack( track, stream );
                     } );
 
                     h.setLocalStream( stream );
-                } ).catch( ( e ) => {
-                    console.error( `stream error: ${ e }` );
+                } ).catch( ( err ) => {
+                    console.error( `stream error: ${ err }` );
                 } );
             }
 
 
 
-            //create offer
+            //make an offer
             if ( createOffer ) {
                 pc[partnerName].onnegotiationneeded = async () => {
                     let offer = await pc[partnerName].createOffer();
@@ -174,14 +196,14 @@ window.addEventListener( 'load', () => {
 
 
 
-            //send ice candidate to partnerNames
+            // transfer ice candidate to partners 
             pc[partnerName].onicecandidate = ( { candidate } ) => {
                 socket.emit( 'ice candidates', { candidate: candidate, to: partnerName, sender: socketId } );
             };
 
 
 
-            //add
+            // append
             pc[partnerName].ontrack = ( e ) => {
                 let str = e.streams[0];
                 if ( document.getElementById( `${ partnerName }-video` ) ) {
@@ -189,27 +211,27 @@ window.addEventListener( 'load', () => {
                 }
 
                 else {
-                    //video elem
+                    // video elements
                     let newVid = document.createElement( 'video' );
                     newVid.id = `${ partnerName }-video`;
                     newVid.srcObject = str;
                     newVid.autoplay = true;
                     newVid.className = 'remote-video';
 
-                    //video controls elements
+                    // control elements for video
                     let controlDiv = document.createElement( 'div' );
                     controlDiv.className = 'remote-video-controls';
                     controlDiv.innerHTML = `<i class="fa fa-microphone text-white pr-3 mute-remote-mic" title="Mute"></i>
                         <i class="fa fa-expand text-white expand-remote-video" title="Expand"></i>`;
 
-                    //create a new div for card
+                    //make another div for card
                     let cardDiv = document.createElement( 'div' );
                     cardDiv.className = 'card card-sm';
                     cardDiv.id = partnerName;
                     cardDiv.appendChild( newVid );
                     cardDiv.appendChild( controlDiv );
 
-                    //put div in main-section elem
+                    //keep div within main-section
                     document.getElementById( 'videos' ).appendChild( cardDiv );
 
                     h.adjustVideoElemSize();
@@ -217,7 +239,7 @@ window.addEventListener( 'load', () => {
             };
 
 
-
+            // state during connection
             pc[partnerName].onconnectionstatechange = ( d ) => {
                 switch ( pc[partnerName].iceConnectionState ) {
                     case 'disconnected':
@@ -249,17 +271,16 @@ window.addEventListener( 'load', () => {
             h.shareScreen().then( ( stream ) => {
                 h.toggleShareIcons( true );
 
-                //disable the video toggle btns while sharing screen. This is to ensure clicking on the btn does not interfere with the screen sharing
-                //It will be enabled was user stopped sharing screen
+                //Duirng screen sharing discard video toggle buttons
                 h.toggleVideoBtnDisabled( true );
 
-                //save my screen stream
+                //capture stream 
                 screen = stream;
 
-                //share the new stream with all partners
+                //transfer with partners new stream
                 broadcastNewTracks( stream, 'video', false );
 
-                //When the stop sharing button shown by the browser is clicked
+                // Stop screen sharing
                 screen.getVideoTracks()[0].addEventListener( 'ended', () => {
                     stopSharingScreen();
                 } );
@@ -271,7 +292,7 @@ window.addEventListener( 'load', () => {
 
 
         function stopSharingScreen() {
-            //enable video toggle btn
+            // screen sharing stopped, start toggle button which was disabled earlier during screen sharing
             h.toggleVideoBtnDisabled( false );
 
             return new Promise( ( res, rej ) => {
@@ -348,7 +369,7 @@ window.addEventListener( 'load', () => {
         }
 
 
-        //Chat textarea
+        // textbox for chat
         document.getElementById( 'chat-input' ).addEventListener( 'keypress', ( e ) => {
             if ( e.which === 13 && ( e.target.value.trim() ) ) {
                 e.preventDefault();
@@ -362,20 +383,22 @@ window.addEventListener( 'load', () => {
         } );
 
 
-        //When the video icon is clicked
+        // clicking the video icon
         document.getElementById( 'toggle-video' ).addEventListener( 'click', ( e ) => {
             e.preventDefault();
 
             let elem = document.getElementById( 'toggle-video' );
 
             if ( myStream.getVideoTracks()[0].enabled ) {
+                // replace the icon
                 e.target.classList.remove( 'fa-video' );
                 e.target.classList.add( 'fa-video-slash' );
                 elem.setAttribute( 'title', 'Show Video' );
 
+                // stop sharing your video
                 myStream.getVideoTracks()[0].enabled = false;
             }
-
+            // if already video is disabled enable it
             else {
                 e.target.classList.remove( 'fa-video-slash' );
                 e.target.classList.add( 'fa-video' );
@@ -388,12 +411,12 @@ window.addEventListener( 'load', () => {
         } );
 
 
-        //When the mute icon is clicked
+        // turn mic off event
         document.getElementById( 'toggle-mute' ).addEventListener( 'click', ( e ) => {
             e.preventDefault();
 
             let elem = document.getElementById( 'toggle-mute' );
-
+            // if on turn it off replace the icon
             if ( myStream.getAudioTracks()[0].enabled ) {
                 e.target.classList.remove( 'fa-microphone' );
                 e.target.classList.add( 'fa-microphone-slash' );
@@ -402,6 +425,7 @@ window.addEventListener( 'load', () => {
                 myStream.getAudioTracks()[0].enabled = false;
             }
 
+            // if off turn it on replace the icon
             else {
                 e.target.classList.remove( 'fa-microphone-slash' );
                 e.target.classList.add( 'fa-microphone' );
@@ -414,7 +438,7 @@ window.addEventListener( 'load', () => {
         } );
 
 
-        //When user clicks the 'Share screen' button
+        //  Screen share event
         document.getElementById( 'share-screen' ).addEventListener( 'click', ( e ) => {
             e.preventDefault();
 
@@ -428,12 +452,9 @@ window.addEventListener( 'load', () => {
         } );
 
 
-        //When record button is clicked
+        // recording the meet
         document.getElementById( 'record' ).addEventListener( 'click', ( e ) => {
-            /**
-             * Ask user what they want to record.
-             * Get the stream based on selection and start recording
-             */
+            // Firstly ask user to record his own video or the entire presentation going on
             if ( !mediaRecorder || mediaRecorder.state == 'inactive' ) {
                 h.toggleModal( 'recording-options-modal', true );
             }
@@ -448,7 +469,7 @@ window.addEventListener( 'load', () => {
         } );
 
 
-        //When user choose to record screen
+        // Recording the entire meeting
         document.getElementById( 'record-screen' ).addEventListener( 'click', () => {
             h.toggleModal( 'recording-options-modal', true );
 
@@ -464,7 +485,7 @@ window.addEventListener( 'load', () => {
         } );
 
 
-        //When user choose to record own video
+        // Recording Self video
         document.getElementById( 'record-video' ).addEventListener( 'click', () => {
             h.toggleModal( 'recording-options-modal', false );
 

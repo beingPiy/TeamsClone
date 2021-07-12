@@ -13,7 +13,7 @@ let server = http.createServer( app );
 // creates a socket.io server
 let io = require( 'socket.io' )( server, { serveClient: true } );
 
-// stream module will return a function which sets up socket for communication
+// stream module will return a function which sets up platform for communication
 let stream = require( './stream' );
 
 // module for working with paths
