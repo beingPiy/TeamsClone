@@ -138,7 +138,7 @@ export default {
             senderName = data.sender;
             msgBg = '';
 
-            this.toggleChatNotificationBadge();
+            this.changeNotificationStatus();
         }
 
         let infoDiv = document.createElement( 'div' );
@@ -147,7 +147,7 @@ export default {
 
         let colDiv = document.createElement( 'div' );
         colDiv.className = `col-10 card chat-card msg ${ msgBg }`;
-        colDiv.innerHTML = `<strong><u><i>${ senderName }</i></u></strong>  <br>`  + xssFilters.inHTMLData( data.msg )
+        colDiv.innerHTML = `<strong><u><i>${ senderName }</i></u></strong>  <br>` + `<h5>` + xssFilters.inHTMLData( data.msg ) + `</h5>`
 
         let rowDiv = document.createElement( 'div' );
         rowDiv.className = `row ${ contentAlign } mb-2`;
@@ -164,8 +164,8 @@ export default {
     },
 
 
-    toggleChatNotificationBadge() {
-        if ( document.querySelector( '#chat-pane' ).classList.contains( 'chat-opened' ) ) {
+    changeNotificationStatus() {
+        if ( document.querySelector( '#chat-bar' ).classList.contains( 'active-chat' ) ) {
             document.querySelector( '#new-chat-notification' ).setAttribute( 'hidden', true );
         }
 
@@ -302,14 +302,14 @@ export default {
                 <i class="fa fa-expand text-white expand-remote-video" title="Expand"></i>`;
 
             //create a new div for card
-            let cardDiv = document.createElement( 'div' );
-            cardDiv.className = 'card card-sm';
-            cardDiv.id = `demo-${ i }`;
-            cardDiv.appendChild( newVid );
-            cardDiv.appendChild( controlDiv );
+            let cardElement = document.createElement( 'div' );
+            cardElement.className = 'card card-sm';
+            cardElement.id = `demo-${ i }`;
+            cardElement.appendChild( newVid );
+            cardElement.appendChild( controlDiv );
 
-            //put div in main-section elem
-            document.getElementById( 'videos' ).appendChild( cardDiv );
+            //put div in primary-section elem
+            document.getElementById( 'videos' ).appendChild( cardElement );
 
             this.adjustVideoElemSize();
 

@@ -1,32 +1,32 @@
-import helpers from './helpers.js';
+import helpers from './methods.js';
 
 
 window.addEventListener( 'load', () => {
-    // Whenever chat icon is clicked chat-pane will open
-    document.querySelector( '#toggle-chat-pane' ).addEventListener( 'click', ( e ) => {
+    // Whenever chat icon is clicked chat-bar will open
+    document.querySelector( '#pop-chat-bar' ).addEventListener( 'click', ( e ) => {
         // store the chat elements and all messages that come in main section
-        let chatElem = document.querySelector( '#chat-pane' );
-        let mainSecElem = document.querySelector( '#main-section' );
+        let chatElem = document.querySelector( '#chat-bar' );
+        let mainSecElem = document.querySelector( '#primary-section' );
 
-        // add messages in chat-pane, adjust the color according to user
-        if ( chatElem.classList.contains( 'chat-opened' ) ) {
+        // add messages in chat-bar, adjust the color according to user
+        if ( chatElem.classList.contains( 'active-chat' ) ) {
             chatElem.setAttribute( 'hidden', true );
             mainSecElem.classList.remove( 'col-md-9' );
             mainSecElem.classList.add( 'col-md-12' );
-            chatElem.classList.remove( 'chat-opened' );
+            chatElem.classList.remove( 'active-chat' );
         }
 
         else {
             chatElem.attributes.removeNamedItem( 'hidden' );
             mainSecElem.classList.remove( 'col-md-12' );
             mainSecElem.classList.add( 'col-md-9' );
-            chatElem.classList.add( 'chat-opened' );
+            chatElem.classList.add( 'active-chat' );
         }
 
         //remove the New badge on chat icon after chat is opened
         setTimeout( () => {
-            if ( document.querySelector( '#chat-pane' ).classList.contains( 'chat-opened' ) ) {
-                helpers.toggleChatNotificationBadge();
+            if ( document.querySelector( '#chat-bar' ).classList.contains( 'active-chat' ) ) {
+                helpers.changeNotificationStatus();
             }
         }, 300 );
     } );
@@ -36,17 +36,17 @@ window.addEventListener( 'load', () => {
     document.getElementById( 'local' ).addEventListener( 'click', () => {
         if ( !document.pictureInPictureElement ) {
             document.getElementById( 'local' ).requestPictureInPicture()
-                .catch( error => {
+                .catch( err => {
                     // Video failed to enter Picture-in-Picture mode.
-                    console.error( error );
+                    console.error( err );
                 } );
         }
 
         else {
             document.exitPictureInPicture()
-                .catch( error => {
+                .catch( err => {
                     // Video failed to leave Picture-in-Picture mode.
-                    console.error( error );
+                    console.error( err );
                 } );
         }
     } );
@@ -55,26 +55,26 @@ window.addEventListener( 'load', () => {
 
 
     // Once Create room button clicked
-    document.getElementById( 'create-room' ).addEventListener( 'click', ( e ) => {
+    document.getElementById( 'build-conference-room' ).addEventListener( 'click', ( e ) => {
         e.preventDefault();
 
         // fetch the room name given
-        let roomName = document.querySelector( '#room-name' ).value;
+        let roomData = document.querySelector( '#room-name' ).value;
 
         // fetch users name
-        let yourName = document.querySelector( '#your-name' ).value;
+        let userData = document.querySelector( '#your-name' ).value;
 
         // if both entries are valid
-        if ( roomName && yourName ) {
+        if ( roomData && userData ) {
 
             // firstly remove any error message if occured previously
             document.querySelector( '#err-msg' ).innerHTML = "";
 
             //  preserve the username in session storage space
-            sessionStorage.setItem( 'username', yourName );
+            sessionStorage.setItem( 'username', userData );
 
             //create room link
-            let roomLink = `${ location.origin }?room=${ roomName.trim().replace( ' ', '_' ) }_${ helpers.generateRandomString() }`;
+            let roomLink = `${ location.origin }?room=${ roomData.trim().replace( ' ', '_' ) }_${ helpers.generateRandomString() }`;
             let postTitle = 'Enter Meet with link'
 
             //show message with link to room

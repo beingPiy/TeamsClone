@@ -1,18 +1,18 @@
 
-import h from './helpers.js';
+import h from './methods.js';
 
 window.addEventListener( 'load', () => {
 
     // fetch the room id from url
-    const room = h.getQString( location.href, 'room' );
+    const roomParam = h.getQString( location.href, 'room' );
 
     // fetch the username from session storage space
     const username = sessionStorage.getItem( 'username' );
 
     // if there is no room id in url
     // simply show the landing page of website
-    // in which host of meeting can enter hostName and roomName and can initiate meeting  
-    if ( !room ) {
+    // in which host of meeting can enter hostName and roomData and can initiate meeting  
+    if ( !roomParam ) {
         document.querySelector( '#room-create' ).attributes.removeNamedItem( 'hidden' );
     }
 
@@ -54,7 +54,7 @@ window.addEventListener( 'load', () => {
 
             // broadcast the event to all peers, within room
             socket.emit( 'subscribe', {
-                room: room,
+                room: roomParam,
                 socketId: socketId
             } );
 
@@ -133,7 +133,7 @@ window.addEventListener( 'load', () => {
 
         function sendMsg( msg ) {
             let data = {
-                room: room,
+                room: roomParam,
                 msg: msg,
                 sender: username
             };
@@ -225,14 +225,14 @@ window.addEventListener( 'load', () => {
                         <i class="fa fa-expand text-white expand-remote-video" title="Expand"></i>`;
 
                     //make another div for card
-                    let cardDiv = document.createElement( 'div' );
-                    cardDiv.className = 'card card-sm';
-                    cardDiv.id = partnerName;
-                    cardDiv.appendChild( newVid );
-                    cardDiv.appendChild( controlDiv );
+                    let cardElement = document.createElement( 'div' );
+                    cardElement.className = 'card card-sm';
+                    cardElement.id = partnerName;
+                    cardElement.appendChild( newVid );
+                    cardElement.appendChild( controlDiv );
 
-                    //keep div within main-section
-                    document.getElementById( 'videos' ).appendChild( cardDiv );
+                    //keep div within primary-section
+                    document.getElementById( 'videos' ).appendChild( cardElement );
 
                     h.adjustVideoElemSize();
                 }
