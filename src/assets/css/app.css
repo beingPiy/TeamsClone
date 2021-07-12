@@ -227,7 +227,7 @@ body{
 }
 
 
-@media only screen and (max-width:767px){
+@media only screen and (max-width:800px){
     .chat-col{
         right: -100vw;
         width: 100vw;
@@ -258,7 +258,6 @@ body{
     .local-video{
         width:40vw;
     }
-}
 
 .share-btn-container {
     background: var(--colorShade2);
@@ -296,9 +295,14 @@ color: #1da1f2;
 color: #25d366;
 }
 
-/* Media Queries */
+.chat-col {
+    right: -100vw;
+    width: 100vw;
+    z-index: auto;
+    transition: 0.3s;
+    top: 47px;
+}
 
-@media (max-width: 800px) {
 .content {
     padding: 8px 32px;
 }
