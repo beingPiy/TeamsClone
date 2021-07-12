@@ -86,10 +86,6 @@ window.addEventListener( 'load', () => {
                     </a>
             
             
-                    <a href="https://www.linkedin.com/shareArticle?url=${roomLink}&title=${postTitle}" class="linkedin-btn" target="_blank">
-                    <i class="fab fa-linkedin"></i>
-                    </a>
-
                     <a href="${roomLink}" class="btn btn-block rounded-0 shade1">Enter Room</a>
                       
                     `;

@@ -14,7 +14,7 @@ body{
 }
 
 .custom-modal-content{
-    width: 25% !important;
+    width: 30% !important;
 }
 
 .text-white {
@@ -292,19 +292,20 @@ color: #3b5998;
 color: #1da1f2;
 }
 
-.share-btn-container .fa-linkedin {
-color: #0077b5;
-}
-
 .share-btn-container .fa-whatsapp {
 color: #25d366;
 }
 
 /* Media Queries */
 
-@media (max-width: 550px) {
+@media (max-width: 800px) {
 .content {
     padding: 8px 32px;
+}
+
+.custom-modal-content{
+    width: 65% !important;
+    margin: 35% auto !important;
 }
 
 .share-btn-container {
