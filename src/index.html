@@ -29,11 +29,11 @@
                 <div class="row text-center">
                     
                     <div class="col-md-6 mb-2">
-                        <span class="record-option shade1"  id='record-screen'>RECORD MEETING</span>
+                        <span class="rec-feature shade1"  id='screen-cap'>RECORD MEETING</span>
                     </div>
                     
                     <div class="col-md-6 mb-2">
-                        <span class="record-option shade1"  id='record-video'>REC SELF STREAM</span>
+                        <span class="rec-feature shade1"  id='record-video'>REC SELF STREAM</span>
                     </div>
 
                 </div>
@@ -41,7 +41,7 @@
                 <div class="row mt-3">
 
                     <div class="col-md-12 text-center">
-                        <button class="btn btn-outline-danger" id='closeModal'>Close</button>
+                        <button class="btn btn-outline-danger" id='dismissBox'>Close</button>
                     </div>
 
                 </div>
@@ -55,7 +55,7 @@
             <div class="text-white">Teams Clone</div>
 
             <!-- hidden attribute because visible only after entering the room -->
-            <div class="pull-right room-comm" hidden>
+            <div class="pull-right communication-in-room" hidden>
 
                 <!-- Leave the meeting and redirect to Home Page -->
                 <button class="btn btn-sm rounded-0 btn-no-effect text-white">
@@ -91,7 +91,7 @@
         </nav>
 
         <!-- Creating a room for meeting -->
-        <div class="container-fluid" id='room-create' hidden>
+        <div class="container-fluid" id='build-room' hidden>
 
             <!-- Heading -->
             <div class="row">
@@ -102,29 +102,31 @@
 
                 <!-- show error message if name missing -->
                 <div class="col-12 text-center">
-                    <span class="form-text small text-danger" id='err-msg'></span>
-                </div>
-
-                <!-- Giving a name to room, this room name will be included in url -->
-                <div class="col-12 col-md-4 offset-md-4 mb-3">
-                    <label for="room-name" style="color:black">Room Name</label>
-                    <input type="text" id='room-name' class="form-control rounded-0" placeholder="Room Name">
+                    <span class="form-text small text-danger" id='error-message'></span>
                 </div>
 
                 <!-- Fetching the user name, user name will play crucial role during conversation -->
                 <div class="col-12 col-md-4 offset-md-4 mb-3">
-                    <label for="your-name" style="color:black">Your Name</label>
-                    <input type="text" id='your-name' class="form-control rounded-0" placeholder="Your Name">
+                    <label for="host-name" style="color:black">Your Name</label>
+                    <input type="text" id='host-name' class="form-control rounded-0" placeholder="Enter Host Name">
                 </div>
+
+                <!-- Giving a name to room, this room name will be included in url -->
+                <div class="col-12 col-md-4 offset-md-4 mb-3">
+                    <label for="conference-room" style="color:black">Room Name</label>
+                    <input type="text" id='conference-room' class="form-control rounded-0" placeholder="Enter Room Name">
+                </div>
+
+                
 
                 <!-- Button to create room -->
                 <div class="col-12 col-md-4 offset-md-4 mb-3">
-                    <button id='build-conference-room' class="btn btn-block rounded-0 shade1">Create Room</button>
+                    <button id='build-conference-room' class="btn btn-block rounded-0 shade1">Build Conference Room</button>
                 </div>
 
                 <!-- Once room is created pop up a box which has options to share meeting url, 
                 and also option of entering in room -->
-                <div class="share-btn-container" id='room-created'></div>
+                <div class="share-btn-container" id='after-creating-room'></div>
 
             </div>
             
@@ -135,7 +137,7 @@
         <!-- Landing Page for new candidates joining the meet from url -->
         <!-- hidden attribute because we need to show this page only 
             when url contains room id as parameter -->
-        <div class="container-fluid" id='username-set' hidden>
+        <div class="container-fluid" id='new-user-entry-meeting' hidden>
 
             <!-- Fetch username, which will be used during conversation -->
             <div class="row">
@@ -146,7 +148,7 @@
 
                 <!-- Show error message in case username is not entered -->
                 <div class="col-12 text-center">
-                    <span class="form-text small text-danger" id='err-msg-username'></span>
+                    <span class="form-text small text-danger" id='error-message-username'></span>
                 </div>
 
                 <!-- Input box for takin username -->
@@ -165,7 +167,7 @@
 
 
         <!-- Layout of the room during meeting -->
-        <div class="container-fluid room-comm" hidden>
+        <div class="container-fluid communication-in-room" hidden>
 
             <!-- Default settings -->
             <div class="row">
@@ -187,7 +189,7 @@
 
                     <!-- Box to input message from user -->
                     <div class="row">
-                        <textarea id='chat-input' class="form-control rounded-0 chat-box border-dark" rows='3' placeholder="Type here..."></textarea>
+                        <textarea id='chat-input' class="form-control rounded-0 chat-box border-dark" rows='3' placeholder="Hit Enter to send..."></textarea>
                     </div>
 
                 </div>

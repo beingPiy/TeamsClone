@@ -59,16 +59,16 @@ window.addEventListener( 'load', () => {
         e.preventDefault();
 
         // fetch the room name given
-        let roomData = document.querySelector( '#room-name' ).value;
+        let roomData = document.querySelector( '#conference-room' ).value;
 
         // fetch users name
-        let userData = document.querySelector( '#your-name' ).value;
+        let userData = document.querySelector( '#host-name' ).value;
 
         // if both entries are valid
         if ( roomData && userData ) {
 
             // firstly remove any error message if occured previously
-            document.querySelector( '#err-msg' ).innerHTML = "";
+            document.querySelector( '#error-message' ).innerHTML = "";
 
             //  preserve the username in session storage space
             sessionStorage.setItem( 'username', userData );
@@ -78,7 +78,7 @@ window.addEventListener( 'load', () => {
             let postTitle = 'Enter Meet with link'
 
             //show message with link to room
-            document.querySelector( '#room-created' ).innerHTML = `
+            document.querySelector( '#after-creating-room' ).innerHTML = `
 
                     <a href="https://wa.me/?text=${postTitle} ${roomLink}" class="whatsapp-btn" target="_blank">
                     <i class="fab fa-whatsapp"></i>
@@ -98,12 +98,12 @@ window.addEventListener( 'load', () => {
                     `;
 
             //empty the values
-            document.querySelector( '#room-name' ).value = '';
-            document.querySelector( '#your-name' ).value = '';
+            document.querySelector( '#conference-room' ).value = '';
+            document.querySelector( '#host-name' ).value = '';
         }
 
         else {
-            document.querySelector( '#err-msg' ).innerHTML = "All fields are mandatory";
+            document.querySelector( '#error-message' ).innerHTML = "All fields are mandatory";
         }
     } );
 
@@ -117,7 +117,7 @@ window.addEventListener( 'load', () => {
 
         if ( name ) {
             // if any error message occured previously remove it
-            document.querySelector( '#err-msg-username' ).innerHTML = "";
+            document.querySelector( '#error-message-username' ).innerHTML = "";
 
             //preserve user name in session storage space
             sessionStorage.setItem( 'username', name );
@@ -128,7 +128,7 @@ window.addEventListener( 'load', () => {
 
         // if invalid(empty) entry for name, show error message
         else {
-            document.querySelector( '#err-msg-username' ).innerHTML = "Please input your name";
+            document.querySelector( '#error-message-username' ).innerHTML = "Please input your name";
         }
     } );
 
@@ -146,7 +146,7 @@ window.addEventListener( 'load', () => {
     } );
 
     // closes the record screen and record self stream dialogue box
-    document.getElementById( 'closeModal' ).addEventListener( 'click', () => {
+    document.getElementById( 'dismissBox' ).addEventListener( 'click', () => {
         helpers.toggleModal( 'recording-options-modal', false );
     } );
 } );

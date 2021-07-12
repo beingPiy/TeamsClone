@@ -13,25 +13,25 @@ window.addEventListener( 'load', () => {
     // simply show the landing page of website
     // in which host of meeting can enter hostName and roomData and can initiate meeting  
     if ( !roomParam ) {
-        document.querySelector( '#room-create' ).attributes.removeNamedItem( 'hidden' );
+        document.querySelector( '#build-room' ).attributes.removeNamedItem( 'hidden' );
     }
 
     // if url contains room id but session storage doesn't have name of user
     // that means user is trying to join meeting from a link
     // in this case open landing page for new users that are trying to enter meeting
     else if ( !username ) {
-        document.querySelector( '#username-set' ).attributes.removeNamedItem( 'hidden' );
+        document.querySelector( '#new-user-entry-meeting' ).attributes.removeNamedItem( 'hidden' );
     }
 
     // once you have both room id in url and 
     // username in session storage 
     // open the main conference page
     else {
-        let commElem = document.getElementsByClassName( 'room-comm' );
+        let communicationElement = document.getElementsByClassName( 'communication-in-room' );
 
-        // wherever the class is room-comm start showing it
-        for ( let i = 0; i < commElem.length; i++ ) {
-            commElem[i].attributes.removeNamedItem( 'hidden' );
+        // wherever the class is communication-in-room start showing it
+        for ( let i = 0; i < communicationElement.length; i++ ) {
+            communicationElement[i].attributes.removeNamedItem( 'hidden' );
         }
 
         var pc = [];
@@ -470,7 +470,7 @@ window.addEventListener( 'load', () => {
 
 
         // Recording the entire meeting
-        document.getElementById( 'record-screen' ).addEventListener( 'click', () => {
+        document.getElementById( 'screen-cap' ).addEventListener( 'click', () => {
             h.toggleModal( 'recording-options-modal', true );
 
             if ( screen && screen.getVideoTracks().length ) {

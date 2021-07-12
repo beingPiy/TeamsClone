@@ -9,7 +9,7 @@ body{
     color: var(--colorShade2) ;
 }
 
-#closeModal{
+#dismissBox{
     color:rgb(0, 0, 0) !important;
 }
 
@@ -190,7 +190,7 @@ body{
 }
 
 
-.record-option{
+.rec-feature{
     height: 200px;
     border-radius: 10%;
     border: 1px solid #17a2b8;
